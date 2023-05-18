@@ -1,0 +1,109 @@
+#!/system/bin/sh
+
+# wait for the filesystems to actually mount
+while [ "`getprop sys.boot_completed | tr -d '\r' `" != "1" ] ; do sleep 1; done
+sleep 10
+
+# globals
+CHROOT=/data/ubuntu
+SET_STAGE=$(cat /sdcard/.setup)
+
+function disableSystemUI() {
+  echo "Disabling systemui" 
+  LOOP_COUNT=0
+  while [ $LOOP_COUNT -le 100 ]
+  do
+    pm disable com.android.systemui
+    sleep 0.1
+    LOOP_COUNT=$(( $LOOP_COUNT + 1 ))
+  done
+  echo "Disabled systemui" 
+}
+
+# make the tmp dir
+if [ ! -e "/data/tmp" ]
+then
+    mkdir /data/tmp
+fi
+
+# progress check
+if [ ! -e "/sdcard/.setup" ]
+then
+    echo "0" > /sdcard/.setup
+fi
+
+# setup has not completed
+# - lt "4"
+if [ "$SET_STAGE" -lt "2" ]
+then
+    # wifi loop
+    # do not progress until there's an internet connection
+    while true; do
+      if ping -c 1 8.8.8.8; then
+        break
+      elif [[ "$(dumpsys activity activities | grep mResumedActivity | cut -d "{" -f2 | cut -d ' ' -f3)" != 'com.android.settings/.Settings$NetworkDashboardActivity' ]]; then
+        am start -a android.settings.WIRELESS_SETTINGS
+      fi
+      sleep 1   
+    done
+    pm disable com.android.settings
+    pm enable com.android.settings
+    # TODO: launch the user setup. for now, just move setup along
+    # am start org.retropilot.retros.usersetup
+    echo "SET STAGE=$SET_STAGE"
+fi 
+
+if [ "$SET_STAGE" -eq "0" ]
+then
+  disableSystemUI
+  echo "1" > /sdcard/.setup
+  SET_STAGE=1
+  reboot
+fi
+
+# wait here until user setup gets a URL
+while true; do
+  if [ "$SET_STAGE" -gt "0" ]
+  then
+    break
+  fi
+  sleep 1
+done
+
+
+# download and install the chroot
+if [ "$SET_STAGE" -lt "2" ]
+then
+    ROOTFS_TAR="ubuntu-focal-core-cloudimg-arm64-root-2020.12.10.tar.gz"
+    curl -L -o /sdcard/Download/ubuntu.tar.gz https://github.com/termux/proot-distro/releases/download/v1.2-ubuntu-focal-rootfs/$ROOTFS_TAR
+    mkdir -p $CHROOT
+    tar xfp /sdcard/Download/ubuntu.tar.gz -C $CHROOT
+    mkdir -p $CHROOT/sdcard
+    mkdir -p $CHROOT/data
+ 
+    DL reqs file, copy userland script into chroot, add stuff to bashrc
+    UBUNTU_REQS='https://raw.githubusercontent.com/flowdriveai/flowpilot/master/scripts/install-flowpilot-android'
+    curl $UBUNTU_REQS > $CHROOT/root/install_reqs.sh
+    # busybox wget $UBUNTU_REQS -P $CHROOT/root/install_reqs.sh
+    chmod +x $CHROOT/root/install_reqs.sh
+    cp /etc/retros/flowpilot_userland $CHROOT/bin/flowpilot_userland
+    chmod +x $CHROOT/bin/flowpilot_userland
+    echo flowpilot_userland >> $CHROOT/root/.bashrc
+    # copy tmux config
+    cp /etc/retros/.tmux.conf $CHROOT/root/.tmux.conf
+ 
+    # DL and install the latest flowpilot APK
+    # FLOWPILOT_APK_URL=$(curl -s https://api.github.com/repos/flowdriveai/flowpilot/releases/latest | grep browser_download_url | cut -d '"' -f 4)
+    # curl -L -o /data/local/tmp/flowpilot.apk $FLOWPILOT_APK_URL
+    # pm install /data/local/tmp/*.apk
+    # rm /data/local/tmp/*.apk
+    # # grant the APK all perms
+    # pm grant ai.flow.android android.permission.WRITE_EXTERNAL_STORAGE
+    # pm grant ai.flow.android android.permission.READ_EXTERNAL_STORAGE
+    # pm grant ai.flow.android android.permission.READ_PHONE_STATE
+    # pm grant ai.flow.android android.permission.CAMERA
+    # pm grant ai.flow.android android.permission.RECORD_AUDIO
+
+    echo "2" > /sdcard/.setup
+    SET_STAGE=2
+fi

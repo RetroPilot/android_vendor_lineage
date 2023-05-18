@@ -15,3 +15,6 @@
 #
 
 $(call add-clean-step, rm -rf $(PRODUCT_OUT)/obj/BOOTANIMATION)
+
+$(call add-clean-step, rm -rf $(PRODUCT_OUT)/tmp)
+$(call add-clean-step, rm -rf $(PRODUCT_OUT)/RETROS)

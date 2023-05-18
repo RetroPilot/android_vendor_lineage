@@ -34,7 +34,15 @@ ifneq ($(strip $(AB_OTA_PARTITIONS) $(AB_OTA_POSTINSTALL_CONFIG)),)
 PRODUCT_COPY_FILES += \
     vendor/lineage/prebuilt/common/bin/backuptool_ab.sh:$(TARGET_COPY_OUT_SYSTEM)/bin/backuptool_ab.sh \
     vendor/lineage/prebuilt/common/bin/backuptool_ab.functions:$(TARGET_COPY_OUT_SYSTEM)/bin/backuptool_ab.functions \
-    vendor/lineage/prebuilt/common/bin/backuptool_postinstall.sh:$(TARGET_COPY_OUT_SYSTEM)/bin/backuptool_postinstall.sh
+    vendor/lineage/prebuilt/common/bin/backuptool_postinstall.sh:$(TARGET_COPY_OUT_SYSTEM)/bin/backuptool_postinstall.sh \
+    vendor/lineage/prebuilt/common/bin/busybox:$(TARGET_COPY_OUT_SYSTEM)/bin/busybox \
+    vendor/lineage/prebuilt/common/bin/launch_retros:$(TARGET_COPY_OUT_SYSTEM)/bin/launch_retros \
+    vendor/lineage/prebuilt/common/bin/launch_flowpilot:$(TARGET_COPY_OUT_SYSTEM)/bin/launch_flowpilot \
+    vendor/lineage/prebuilt/common/bin/phh-su:$(TARGET_COPY_OUT_SYSTEM)/bin/phh-su \
+    vendor/lineage/prebuilt/common/etc/retros/flowpilot_userland:$(TARGET_COPY_OUT_SYSTEM)/etc/retros/flowpilot_userland \
+    vendor/lineage/prebuilt/common/xbin/su:$(TARGET_COPY_OUT_SYSTEM)/xbin/su \
+    vendor/lineage/prebuilt/common/etc/retros/.tmux.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/retros/.tmux.conf 
+    # vendor/lineage/prebuilt/common/etc/permissions/privapp-permissions-retropilot.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-retropilot.xml
 ifneq ($(TARGET_BUILD_VARIANT),user)
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.ota.allow_downgrade=true
@@ -112,6 +120,9 @@ PRODUCT_PACKAGES += \
     LineageSettingsProvider \
     LineageSetupWizard \
     Updater
+
+# PRODUCT_PACKAGES += \
+#     termux
 
 # Themes
 PRODUCT_PACKAGES += \
