@@ -121,8 +121,8 @@ PRODUCT_PACKAGES += \
     LineageSetupWizard \
     Updater
 
-# PRODUCT_PACKAGES += \
-#     termux
+PRODUCT_PACKAGES += \
+    termux
 
 # Themes
 PRODUCT_PACKAGES += \
