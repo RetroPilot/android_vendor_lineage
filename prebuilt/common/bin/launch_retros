@@ -93,16 +93,16 @@ then
     cp /etc/retros/.tmux.conf $CHROOT/root/.tmux.conf
  
     # DL and install the latest flowpilot APK
-    # FLOWPILOT_APK_URL=$(curl -s https://api.github.com/repos/flowdriveai/flowpilot/releases/latest | grep browser_download_url | cut -d '"' -f 4)
-    # curl -L -o /data/local/tmp/flowpilot.apk $FLOWPILOT_APK_URL
-    # pm install /data/local/tmp/*.apk
-    # rm /data/local/tmp/*.apk
-    # # grant the APK all perms
-    # pm grant ai.flow.android android.permission.WRITE_EXTERNAL_STORAGE
-    # pm grant ai.flow.android android.permission.READ_EXTERNAL_STORAGE
-    # pm grant ai.flow.android android.permission.READ_PHONE_STATE
-    # pm grant ai.flow.android android.permission.CAMERA
-    # pm grant ai.flow.android android.permission.RECORD_AUDIO
+    
+    curl -L -o /data/local/tmp/flowpilot.apk $FLOWPILOT_APK_URL
+    pm install /data/local/tmp/*.apk
+    rm /data/local/tmp/*.apk
+    # grant the APK all perms
+    pm grant ai.flow.android android.permission.WRITE_EXTERNAL_STORAGE
+    pm grant ai.flow.android android.permission.READ_EXTERNAL_STORAGE
+    pm grant ai.flow.android android.permission.READ_PHONE_STATE
+    pm grant ai.flow.android android.permission.CAMERA
+    pm grant ai.flow.android android.permission.RECORD_AUDIO
 
     echo "2" > /sdcard/.setup
     SET_STAGE=2
