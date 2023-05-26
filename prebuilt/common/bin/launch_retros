@@ -93,7 +93,7 @@ then
     cp /etc/retros/.tmux.conf $CHROOT/root/.tmux.conf
  
     # DL and install the latest flowpilot APK
-    
+    FLOWPILOT_APK_URL=$(curl -s https://api.github.com/repos/flowdriveai/flowpilot/releases/latest | grep browser_download_url | cut -d '"' -f 4)
     curl -L -o /data/local/tmp/flowpilot.apk $FLOWPILOT_APK_URL
     pm install /data/local/tmp/*.apk
     rm /data/local/tmp/*.apk
