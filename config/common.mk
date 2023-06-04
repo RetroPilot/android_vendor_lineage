@@ -40,6 +40,7 @@ PRODUCT_COPY_FILES += \
     vendor/lineage/prebuilt/common/bin/launch_flowpilot:$(TARGET_COPY_OUT_SYSTEM)/bin/launch_flowpilot \
     vendor/lineage/prebuilt/common/bin/phh-su:$(TARGET_COPY_OUT_SYSTEM)/bin/phh-su \
     vendor/lineage/prebuilt/common/etc/retros/flowpilot_userland:$(TARGET_COPY_OUT_SYSTEM)/etc/retros/flowpilot_userland \
+    vendor/lineage/prebuilt/common/etc/retros/flowpilot_startup:$(TARGET_COPY_OUT_SYSTEM)/etc/retros/flowpilot_startup \
     vendor/lineage/prebuilt/common/xbin/su:$(TARGET_COPY_OUT_SYSTEM)/xbin/su \
     vendor/lineage/prebuilt/common/etc/retros/.tmux.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/retros/.tmux.conf \
     vendor/lineage/prebuilt/common/etc/permissions/privapp-permissions-retropilot.xml:system/etc/permissions/privapp-permissions-retropilot.xml
@@ -111,7 +112,7 @@ PRODUCT_RESTRICT_VENDOR_FILES := false
 
 # Bootanimation
 TARGET_SCREEN_WIDTH ?= 1080
-TARGET_SCREEN_HEIGHT ?= 1920
+TARGET_SCREEN_HEIGHT ?= 2400
 PRODUCT_PACKAGES += \
     bootanimation.zip
 
@@ -123,7 +124,7 @@ PRODUCT_PACKAGES += \
     Updater
 
 PRODUCT_PACKAGES += \
-    termux
+    opencamera
 
 # Themes
 PRODUCT_PACKAGES += \
@@ -190,8 +191,8 @@ endif
 endif
 
 # Dex preopt
-PRODUCT_DEXPREOPT_SPEED_APPS += \
-    SystemUI
+# PRODUCT_DEXPREOPT_SPEED_APPS += \
+#     SystemUI
 
 PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += vendor/lineage/overlay
 PRODUCT_PACKAGE_OVERLAYS += vendor/lineage/overlay/common

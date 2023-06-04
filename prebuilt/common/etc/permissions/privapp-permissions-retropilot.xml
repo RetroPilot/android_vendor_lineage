@@ -16,7 +16,7 @@
   -->
 
 <permissions>
-    <privapp-permissions package="com.android.terminal_11">
+    <!--<privapp-permissions package="com.android.terminal_11">
         <permission name="android.permission.ACCESS_NETWORK_STATE"/>
         <permission name="android.permission.INTERNET"/>
         <permission name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -46,6 +46,12 @@
         <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
         <permission name="android.permission.PACKAGE_USAGE_STATS"/>
         <permission name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    </privapp-permissions>-->
+        <privapp-permissions package="net.sourceforge.opencamera">
+        <permission name="android.permission.CAMERA"/>
+        <permission name="android.permission.RECORD_AUDIO" />
+        <permission name="android.permission.ACCESS_FINE_LOCATION" />
+        <permission name="android.permission.ACCESS_COARSE_LOCATION" />
     </privapp-permissions>
 </permissions>
 

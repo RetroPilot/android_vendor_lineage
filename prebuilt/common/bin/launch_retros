@@ -9,7 +9,7 @@ CHROOT=/data/ubuntu
 SET_STAGE=$(cat /sdcard/.setup)
 
 function disableSystemUI() {
-  echo "Disabling systemui" 
+  echo "Disabling systemui"
   LOOP_COUNT=0
   while [ $LOOP_COUNT -le 100 ]
   do
@@ -17,7 +17,7 @@ function disableSystemUI() {
     sleep 0.1
     LOOP_COUNT=$(( $LOOP_COUNT + 1 ))
   done
-  echo "Disabled systemui" 
+  echo "Disabled systemui"
 }
 
 # make the tmp dir
@@ -44,21 +44,21 @@ then
       elif [[ "$(dumpsys activity activities | grep mResumedActivity | cut -d "{" -f2 | cut -d ' ' -f3)" != 'com.android.settings/.Settings$NetworkDashboardActivity' ]]; then
         am start -a android.settings.WIRELESS_SETTINGS
       fi
-      sleep 1   
+      sleep 1
     done
     pm disable com.android.settings
     pm enable com.android.settings
     # TODO: launch the user setup. for now, just move setup along
     # am start org.retropilot.retros.usersetup
     echo "SET STAGE=$SET_STAGE"
-fi 
+fi
 
 if [ "$SET_STAGE" -eq "0" ]
 then
-  disableSystemUI
-  echo "1" > /sdcard/.setup
-  SET_STAGE=1
-  reboot
+    disableSystemUI
+    echo "1" > /sdcard/.setup
+    SET_STAGE=1
+    reboot
 fi
 
 # wait here until user setup gets a URL
@@ -80,30 +80,68 @@ then
     tar xfp /sdcard/Download/ubuntu.tar.gz -C $CHROOT
     mkdir -p $CHROOT/sdcard
     mkdir -p $CHROOT/data
- 
+
     DL reqs file, copy userland script into chroot, add stuff to bashrc
     UBUNTU_REQS='https://raw.githubusercontent.com/flowdriveai/flowpilot/master/scripts/install-flowpilot-android'
     curl $UBUNTU_REQS > $CHROOT/root/install_reqs.sh
     # busybox wget $UBUNTU_REQS -P $CHROOT/root/install_reqs.sh
     chmod +x $CHROOT/root/install_reqs.sh
     cp /etc/retros/flowpilot_userland $CHROOT/bin/flowpilot_userland
+    cp /etc/retros/flowpilot_startup $CHROOT/bin/flowpilot_startup
     chmod +x $CHROOT/bin/flowpilot_userland
+    chmod +x $CHROOT/bin/flowpilot_startup
     echo flowpilot_userland >> $CHROOT/root/.bashrc
+    echo flowpilot_startup >> $CHROOT/root/.bashrc
     # copy tmux config
     cp /etc/retros/.tmux.conf $CHROOT/root/.tmux.conf
- 
+
     # DL and install the latest flowpilot APK
-    FLOWPILOT_APK_URL=$(curl -s https://api.github.com/repos/flowdriveai/flowpilot/releases/latest | grep browser_download_url | cut -d '"' -f 4)
+    FLOWPILOT_APK_URL="https://github.com/RetroPilot/flowpilot/releases/download/v0.1.0alpha2/android-release.apk"
     curl -L -o /data/local/tmp/flowpilot.apk $FLOWPILOT_APK_URL
     pm install /data/local/tmp/*.apk
     rm /data/local/tmp/*.apk
     # grant the APK all perms
     pm grant ai.flow.android android.permission.WRITE_EXTERNAL_STORAGE
     pm grant ai.flow.android android.permission.READ_EXTERNAL_STORAGE
+    pm grant ai.flow.android android.permission.MANAGE_EXTERNAL_STORAGE
     pm grant ai.flow.android android.permission.READ_PHONE_STATE
     pm grant ai.flow.android android.permission.CAMERA
     pm grant ai.flow.android android.permission.RECORD_AUDIO
+    pm grant ai.flow.android android.permission.SHUTDOWN
+    pm grant ai.flow.android android.permission.WAKE_LOCK
+    pm grant ai.flow.android android.permission.INTERNET
+    pm grant ai.flow.android android.permission.VIBRATE
 
+    monkey -p ai.flow.android -c android.intent.category.LAUNCHER 1
     echo "2" > /sdcard/.setup
     SET_STAGE=2
+fi
+
+function setupUserSpace() {
+    # run the other script
+    # mount tmpfs and others\
+    mount -o remount,dev,suid /data
+    mount -t tmpfs -o size=2048M tmpfs /data/tmp
+    mount --bind /data/tmp $CHROOT/tmp
+    mount --bind /proc $CHROOT/proc
+    mount --bind /dev $CHROOT/dev
+    mount --bind /dev/null $CHROOT/dev/null
+    mount --bind /dev/pts $CHROOT/dev/pts
+    mount --bind /sys $CHROOT/sys
+    mount --bind /sdcard $CHROOT/sdcard
+    mount --bind /data $CHROOT/data
+}
+
+# login to the chroot
+if [ "$SET_STAGE" -ge "2" ]
+then
+  if [ ! "`mount | grep "/data/tmp"`" ]; then
+   echo "mounting filesystems"
+   setupUserSpace
+  else
+   echo "filesystems already mounted!"
+  fi
+  log into the new userland
+  echo "logging into userspace now"
+  chroot $CHROOT /usr/bin/env HOME=/root PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/games:/usr/local/games TERM=xterm-256color LANG=C.UTF-8 SHELL=/bin/bash flowpilot_startup
 fi

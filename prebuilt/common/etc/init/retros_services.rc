@@ -21,8 +21,8 @@ service retros_start /system/bin/launch_retros
     oneshot
     seclabel u:object_r:init:s0
 
-// on boot
-//     start su_daemon
+## on boot
+##    start su_daemon
 
-// on property:sys.boot_completed=1
-//     start retros_start
+## on property:sys.boot_completed=1
+##    start retros_start

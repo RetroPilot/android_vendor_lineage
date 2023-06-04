@@ -1,22 +1,22 @@
 #!/system/bin/sh
 
-# while true; do
-#   if [ -f "/data/tmp/chroot_booted" ]
-#   then
-#     break
-#   else
-#     sleep 1
-#   fi
-# done
+while true; do
+  if [ -f "/data/tmp/chroot_booted" ]
+  then
+    exit
+  else
+    break
+  fi
+done
 
-# monkey -p ai.flow.android -c android.intent.category.LAUNCHER 1
+monkey -p ai.flow.android -c android.intent.category.LAUNCHER 1
 
 
 CHROOT=/data/ubuntu
 SET_STAGE=$(cat /sdcard/.setup)
 
 function setupUserSpace() {
-    # run the other script 
+    # run the other script
     # mount tmpfs and others\
     mount -o remount,dev,suid /data
     mount -t tmpfs -o size=2048M tmpfs /data/tmp
