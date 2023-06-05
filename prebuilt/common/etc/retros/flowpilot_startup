@@ -30,7 +30,7 @@ add_to_file() {
 }
 
 # FLOWPILOT SETUP
-if [ "$SET_STAGE" -eq "2" ]
+if [ "$SET_STAGE" -ge "3" ]
 then
     info "Preparing to install flowpilot..."
 
@@ -62,15 +62,19 @@ then
     sudo apt install -y openssh-server
 
     # setup perms for ssh and set password
-    echo "Port 8022" >> /etc/ssh/sshd_config
-    echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-    echo "root:retros" | chpasswd
+    # echo "Port 8022" >> /etc/ssh/sshd_config
+    # echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+    # echo "root:retros" | chpasswd
 
-    mkdir /run/sshd
-    chmod 755 /run/sshd
+    # mkdir /run/sshd
+    # chmod 755 /run/sshd
+    /usr/sbin/sshd
 
-    echo "3" > /sdcard/.setup
-    SET_STAGE=3
+    echo "4" > /sdcard/.setup
+    SET_STAGE=4
+
+    info "Running flowpilot_userland"
+    flowpilot_userland
+
     # END FLOWPILOT SETUP
-    /usr/sbin/sshd -D & tmux new-session -d -s "userland" "flowpilot_userland"
 fi

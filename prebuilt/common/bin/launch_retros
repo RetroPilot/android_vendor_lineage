@@ -8,6 +8,8 @@ sleep 10
 CHROOT=/data/ubuntu
 SET_STAGE=$(cat /sdcard/.setup)
 
+monkey -p ai.flow.android -c android.intent.category.LAUNCHER 1
+
 function disableSystemUI() {
   echo "Disabling systemui"
   LOOP_COUNT=0
@@ -74,8 +76,9 @@ done
 # download and install the chroot
 if [ "$SET_STAGE" -lt "2" ]
 then
-    ROOTFS_TAR="ubuntu-focal-core-cloudimg-arm64-root-2020.12.10.tar.gz"
-    curl -L -o /sdcard/Download/ubuntu.tar.gz https://github.com/termux/proot-distro/releases/download/v1.2-ubuntu-focal-rootfs/$ROOTFS_TAR
+    # ROOTFS_TAR="ubuntu-focal-core-cloudimg-arm64-root-2020.12.10.tar.gz"
+    # curl -L -o /sdcard/Download/ubuntu.tar.gz https://github.com/termux/proot-distro/releases/download/v1.2-ubuntu-focal-rootfs/$ROOTFS_TAR
+    curl -L -o /sdcard/Download/ubuntu.tar.gz https://github.com/RetroPilot/flowpilot/releases/download/v0.1.0alpha2/flowpilot-chroot.tar.gz
     mkdir -p $CHROOT
     tar xfp /sdcard/Download/ubuntu.tar.gz -C $CHROOT
     mkdir -p $CHROOT/sdcard
@@ -90,29 +93,9 @@ then
     cp /etc/retros/flowpilot_startup $CHROOT/bin/flowpilot_startup
     chmod +x $CHROOT/bin/flowpilot_userland
     chmod +x $CHROOT/bin/flowpilot_startup
-    echo flowpilot_userland >> $CHROOT/root/.bashrc
-    echo flowpilot_startup >> $CHROOT/root/.bashrc
     # copy tmux config
     cp /etc/retros/.tmux.conf $CHROOT/root/.tmux.conf
 
-    # DL and install the latest flowpilot APK
-    FLOWPILOT_APK_URL="https://github.com/RetroPilot/flowpilot/releases/download/v0.1.0alpha2/android-release.apk"
-    curl -L -o /data/local/tmp/flowpilot.apk $FLOWPILOT_APK_URL
-    pm install /data/local/tmp/*.apk
-    rm /data/local/tmp/*.apk
-    # grant the APK all perms
-    pm grant ai.flow.android android.permission.WRITE_EXTERNAL_STORAGE
-    pm grant ai.flow.android android.permission.READ_EXTERNAL_STORAGE
-    pm grant ai.flow.android android.permission.MANAGE_EXTERNAL_STORAGE
-    pm grant ai.flow.android android.permission.READ_PHONE_STATE
-    pm grant ai.flow.android android.permission.CAMERA
-    pm grant ai.flow.android android.permission.RECORD_AUDIO
-    pm grant ai.flow.android android.permission.SHUTDOWN
-    pm grant ai.flow.android android.permission.WAKE_LOCK
-    pm grant ai.flow.android android.permission.INTERNET
-    pm grant ai.flow.android android.permission.VIBRATE
-
-    monkey -p ai.flow.android -c android.intent.category.LAUNCHER 1
     echo "2" > /sdcard/.setup
     SET_STAGE=2
 fi
@@ -142,6 +125,10 @@ then
    echo "filesystems already mounted!"
   fi
   log into the new userland
+
+  echo "3" > /sdcard/.setup
+  SET_STAGE=3
+
   echo "logging into userspace now"
   chroot $CHROOT /usr/bin/env HOME=/root PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/games:/usr/local/games TERM=xterm-256color LANG=C.UTF-8 SHELL=/bin/bash flowpilot_startup
 fi

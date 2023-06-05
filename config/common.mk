@@ -43,8 +43,7 @@ PRODUCT_COPY_FILES += \
     vendor/lineage/prebuilt/common/etc/retros/flowpilot_startup:$(TARGET_COPY_OUT_SYSTEM)/etc/retros/flowpilot_startup \
     vendor/lineage/prebuilt/common/xbin/su:$(TARGET_COPY_OUT_SYSTEM)/xbin/su \
     vendor/lineage/prebuilt/common/etc/retros/.tmux.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/retros/.tmux.conf \
-    vendor/lineage/prebuilt/common/etc/permissions/privapp-permissions-retropilot.xml:system/etc/permissions/privapp-permissions-retropilot.xml
-    # vendor/lineage/prebuilt/common/etc/permissions/privapp-permissions-retropilot.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-retropilot.xml
+    vendor/lineage/prebuilt/common/etc/permissions/privapp-permissions-retropilot.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-retropilot.xml
 ifneq ($(TARGET_BUILD_VARIANT),user)
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.ota.allow_downgrade=true
@@ -124,7 +123,8 @@ PRODUCT_PACKAGES += \
     Updater
 
 PRODUCT_PACKAGES += \
-    opencamera
+    opencamera \
+    flowpilot
 
 # Themes
 PRODUCT_PACKAGES += \
