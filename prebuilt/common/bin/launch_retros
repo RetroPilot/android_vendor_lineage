@@ -25,42 +25,42 @@ function disableSystemUI() {
 # make the tmp dir
 if [ ! -e "/data/tmp" ]
 then
-    mkdir /data/tmp
+  mkdir /data/tmp
 fi
 
 # progress check
 if [ ! -e "/sdcard/.setup" ]
 then
-    echo "0" > /sdcard/.setup
+  echo "0" > /sdcard/.setup
 fi
 
 # setup has not completed
 # - lt "4"
 if [ "$SET_STAGE" -lt "2" ]
 then
-    # wifi loop
-    # do not progress until there's an internet connection
-    while true; do
-      if ping -c 1 8.8.8.8; then
-        break
-      elif [[ "$(dumpsys activity activities | grep mResumedActivity | cut -d "{" -f2 | cut -d ' ' -f3)" != 'com.android.settings/.Settings$NetworkDashboardActivity' ]]; then
-        am start -a android.settings.WIRELESS_SETTINGS
-      fi
-      sleep 1
-    done
-    pm disable com.android.settings
-    pm enable com.android.settings
-    # TODO: launch the user setup. for now, just move setup along
-    # am start org.retropilot.retros.usersetup
-    echo "SET STAGE=$SET_STAGE"
+  # wifi loop
+  # do not progress until there's an internet connection
+  while true; do
+    if ping -c 1 8.8.8.8; then
+      break
+    elif [[ "$(dumpsys activity activities | grep mResumedActivity | cut -d "{" -f2 | cut -d ' ' -f3)" != 'com.android.settings/.Settings$NetworkDashboardActivity' ]]; then
+      am start -a android.settings.WIRELESS_SETTINGS
+    fi
+    sleep 1
+  done
+  pm disable com.android.settings
+  pm enable com.android.settings
+  # TODO: launch the user setup. for now, just move setup along
+  # am start org.retropilot.retros.usersetup
+  echo "SET STAGE=$SET_STAGE"
 fi
 
 if [ "$SET_STAGE" -eq "0" ]
 then
-    disableSystemUI
-    echo "1" > /sdcard/.setup
-    SET_STAGE=1
-    reboot
+  disableSystemUI
+  echo "1" > /sdcard/.setup
+  SET_STAGE=1
+  reboot
 fi
 
 # wait here until user setup gets a URL
@@ -76,59 +76,32 @@ done
 # download and install the chroot
 if [ "$SET_STAGE" -lt "2" ]
 then
-    # ROOTFS_TAR="ubuntu-focal-core-cloudimg-arm64-root-2020.12.10.tar.gz"
-    # curl -L -o /sdcard/Download/ubuntu.tar.gz https://github.com/termux/proot-distro/releases/download/v1.2-ubuntu-focal-rootfs/$ROOTFS_TAR
-    curl -L -o /sdcard/Download/ubuntu.tar.gz https://github.com/RetroPilot/flowpilot/releases/download/v0.1.0alpha2/flowpilot-chroot.tar.gz
-    mkdir -p $CHROOT
-    tar xfp /sdcard/Download/ubuntu.tar.gz -C $CHROOT
-    mkdir -p $CHROOT/sdcard
-    mkdir -p $CHROOT/data
+  # ROOTFS_TAR="ubuntu-focal-core-cloudimg-arm64-root-2020.12.10.tar.gz"
+  # curl -L -o /sdcard/Download/ubuntu.tar.gz https://github.com/termux/proot-distro/releases/download/v1.2-ubuntu-focal-rootfs/$ROOTFS_TAR
+  curl -L -o /sdcard/Download/ubuntu.tar.gz https://github.com/RetroPilot/flowpilot/releases/download/v0.1.0alpha2/flowpilot-chroot.tar.gz
+  mkdir -p $CHROOT
+  tar xfp /sdcard/Download/ubuntu.tar.gz -C $CHROOT
+  mkdir -p $CHROOT/sdcard
+  mkdir -p $CHROOT/data
 
-    DL reqs file, copy userland script into chroot, add stuff to bashrc
-    UBUNTU_REQS='https://raw.githubusercontent.com/flowdriveai/flowpilot/master/scripts/install-flowpilot-android'
-    curl $UBUNTU_REQS > $CHROOT/root/install_reqs.sh
-    # busybox wget $UBUNTU_REQS -P $CHROOT/root/install_reqs.sh
-    chmod +x $CHROOT/root/install_reqs.sh
-    cp /etc/retros/flowpilot_userland $CHROOT/bin/flowpilot_userland
-    cp /etc/retros/flowpilot_startup $CHROOT/bin/flowpilot_startup
-    chmod +x $CHROOT/bin/flowpilot_userland
-    chmod +x $CHROOT/bin/flowpilot_startup
-    # copy tmux config
-    cp /etc/retros/.tmux.conf $CHROOT/root/.tmux.conf
+  # DL reqs file, copy userland script into chroot, add stuff to bashrc
+  UBUNTU_REQS='https://raw.githubusercontent.com/flowdriveai/flowpilot/master/scripts/install-flowpilot-android'
+  curl $UBUNTU_REQS > $CHROOT/root/install_reqs.sh
+  # busybox wget $UBUNTU_REQS -P $CHROOT/root/install_reqs.sh
+  chmod +x $CHROOT/root/install_reqs.sh
+  cp /etc/retros/flowpilot_userland $CHROOT/bin/flowpilot_userland
+  cp /etc/retros/flowpilot_startup $CHROOT/bin/flowpilot_startup
+  chmod +x $CHROOT/bin/flowpilot_userland
+  chmod +x $CHROOT/bin/flowpilot_startup
+  # copy tmux config
+  cp /etc/retros/.tmux.conf $CHROOT/root/.tmux.conf
 
-    echo "2" > /sdcard/.setup
-    SET_STAGE=2
+  echo "2" > /sdcard/.setup
+  SET_STAGE=2
 fi
-
-function setupUserSpace() {
-    # run the other script
-    # mount tmpfs and others\
-    mount -o remount,dev,suid /data
-    mount -t tmpfs -o size=2048M tmpfs /data/tmp
-    mount --bind /data/tmp $CHROOT/tmp
-    mount --bind /proc $CHROOT/proc
-    mount --bind /dev $CHROOT/dev
-    mount --bind /dev/null $CHROOT/dev/null
-    mount --bind /dev/pts $CHROOT/dev/pts
-    mount --bind /sys $CHROOT/sys
-    mount --bind /sdcard $CHROOT/sdcard
-    mount --bind /data $CHROOT/data
-}
 
 # login to the chroot
 if [ "$SET_STAGE" -ge "2" ]
 then
-  if [ ! "`mount | grep "/data/tmp"`" ]; then
-   echo "mounting filesystems"
-   setupUserSpace
-  else
-   echo "filesystems already mounted!"
-  fi
-  log into the new userland
-
-  echo "3" > /sdcard/.setup
-  SET_STAGE=3
-
-  echo "logging into userspace now"
-  chroot $CHROOT /usr/bin/env HOME=/root PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/games:/usr/local/games TERM=xterm-256color LANG=C.UTF-8 SHELL=/bin/bash flowpilot_startup
+  launch_flowpilot
 fi

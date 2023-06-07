@@ -29,21 +29,61 @@ add_to_file() {
     grep -qF -- "$1" "$2" || echo "$1" >> "$2"
 }
 
-if [ "$SET_STAGE" -eq "4" ]
+# FLOWPILOT SETUP
+if [ "$SET_STAGE" -eq "2" ]
+then 
+    info "Preparing to install flowpilot..."
+
+    # fix apt
+    add_to_file "nameserver 8.8.8.8" /etc/resolv.conf
+
+    groupadd -g 3001 aid_bt || true
+    groupadd -g 3002 aid_bt_net || true
+    groupadd -g 3003 aid_inet || true
+    groupadd -g 3004 aid_net_raw || true
+    groupadd -g 3005 aid_admin || true
+
+    usermod -a -G aid_bt,aid_bt_net,aid_inet,aid_net_raw,aid_admin root || true
+    usermod -g 3003 _apt || true
+
+    add_to_file "export ANDROID_DATA=''" ~/.bashrc
+    add_to_file "export PIP_ROOT_USER_ACTION=ignore" ~/.bashrc
+    export ANDROID_DATA=''
+    export PIP_ROOT_USER_ACTION=ignore
+
+    apt update && apt install -y sudo git
+    DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata
+    sudo apt install -y software-properties-common
+    yes | sudo add-apt-repository ppa:deadsnakes/ppa || true
+    sudo apt install -y python3.9 python3.9-dev python3.9-distutils python-is-python3 python3-pip
+    sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1
+    sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
+
+    echo "3" > /sdcard/.setup
+    SET_STAGE=3
+    # END FLOWPILOT SETUP
+fi
+
+if [ "$SET_STAGE" -eq "3" ]
 then
     # GIT CLONE FLOWPILOT
-    cd ~/ && [ ! -d 'flowpilot' ] && git clone https://github.com/flowdriveai/flowpilot.git -b master || true
+    cd ~/ && [ ! -d 'flowpilot' ] && git clone https://github.com/flowdriveai/flowpilot.git -b community || true
     cd ~/flowpilot && git submodule update --init
     # INSTALL DEPS
     ./get_dependencies.sh
-    sleep 5
     scons
-    echo "5" > /sdcard/.setup
-    SET_STAGE=5
+    echo "4" > /sdcard/.setup
+    SET_STAGE=4
+fi
+
+if [ ! -e "/run/sshd" ]
+then
+    mkdir /run/sshd
+    chmod 755 /run/sshd
 fi
 
 # when it's all said and done, launch FlowPilot's env
-if [ "$SET_STAGE" -eq "5" ]
+if [ "$SET_STAGE" -eq "4" ]
 then
     cd ~/flowpilot
     ./launch_flowpilot.sh
