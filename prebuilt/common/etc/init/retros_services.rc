@@ -22,7 +22,7 @@ service retros_start /system/bin/launch_retros
     seclabel u:object_r:init:s0
 
 on boot
-    start su_daemon
+    exec_start su_daemon
 
 on property:sys.boot_completed=1
-    start retros_start
+    exec_start retros_start
