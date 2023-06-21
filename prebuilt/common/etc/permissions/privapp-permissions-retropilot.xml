@@ -16,7 +16,7 @@
   -->
 
 <permissions>
-    <!--<privapp-permissions package="com.android.terminal_11">
+    <!-- <privapp-permissions package="com.android.terminal_11">
         <permission name="android.permission.ACCESS_NETWORK_STATE"/>
         <permission name="android.permission.INTERNET"/>
         <permission name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -29,24 +29,26 @@
         <permission name="android.permission.DUMP"/>
         <permission name="android.permission.REQUEST_INSTALL_PACKAGES"/>
         <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
+        <permission name="android.permission.PACKAGE_USAGE_STATS"/>
+    </privapp-permissions> -->
+    <privapp-permissions package="com.termux">
+        <permission name="android.permission.ACCESS_NETWORK_STATE" />
+        <permission name="android.permission.INTERNET" />
+        <permission name="android.permission.READ_EXTERNAL_STORAGE" />
+        <permission name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        <permission name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+        <permission name="android.permission.WAKE_LOCK" />
+        <permission name="android.permission.VIBRATE" />
+        <permission name="android.permission.FOREGROUND_SERVICE" />
+        <permission name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+        <permission name="android.permission.SYSTEM_ALERT_WINDOW" />
+        <permission name="android.permission.READ_LOGS" />
+        <permission name="android.permission.DUMP" />
+        <permission name="android.permission.WRITE_SECURE_SETTINGS" />
+        <permission name="android.permission.REQUEST_INSTALL_PACKAGES" />
+        <permission name="android.permission.RECEIVE_BOOT_COMPLETED" />
         <permission name="android.permission.PACKAGE_USAGE_STATS"/>
     </privapp-permissions>
-    <privapp-permissions package="com.termux">
-        <permission name="android.permission.ACCESS_NETWORK_STATE"/>
-        <permission name="android.permission.INTERNET"/>
-        <permission name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-        <permission name="android.permission.WAKE_LOCK"/>
-        <permission name="android.permission.VIBRATE"/>
-        <permission name="android.permission.FOREGROUND_SERVICE"/>
-        <permission name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
-        <permission name="android.permission.SYSTEM_ALERT_WINDOW"/>
-        <permission name="android.permission.READ_LOGS"/>
-        <permission name="android.permission.DUMP"/>
-        <permission name="android.permission.REQUEST_INSTALL_PACKAGES"/>
-        <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
-        <permission name="android.permission.PACKAGE_USAGE_STATS"/>
-        <permission name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
-    </privapp-permissions>-->
     <privapp-permissions package="net.sourceforge.opencamera">
         <permission name="android.permission.CAMERA"/>
         <permission name="android.permission.RECORD_AUDIO" />
@@ -63,6 +65,38 @@
         <permission name="android.permission.RECORD_AUDIO"/>
         <permission name="android.permission.READ_PHONE_STATE"/>
         <permission name="android.permission.ACCESS_WIFI_STATE"/>
+    </privapp-permissions>
+    <privapp-permissions package="com.termux.api">
+        <permission name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+        <permission name="android.permission.ACCESS_COARSE_LOCATION" />
+        <permission name="android.permission.ACCESS_FINE_LOCATION" />
+        <permission name="android.permission.ACCESS_NETWORK_STATE" />
+        <permission name="android.permission.ACCESS_WIFI_STATE" />
+        <permission name="android.permission.BODY_SENSORS" />
+        <permission name="android.permission.CALL_PHONE"/>
+        <permission name="android.permission.CAMERA" />
+        <permission name="android.permission.CHANGE_WIFI_STATE" />
+        <permission name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+        <permission name="android.permission.NFC"/>
+        <permission name="android.permission.READ_CALL_LOG" />
+        <permission name="android.permission.READ_CONTACTS"/>
+        <permission name="android.permission.READ_PHONE_STATE" />
+        <permission name="android.permission.READ_PRIVILEGED_PHONE_STATE"/>
+        <permission name="android.permission.READ_SMS" />
+        <permission name="android.permission.READ_EXTERNAL_STORAGE" />
+        <permission name="android.permission.RECEIVE_BOOT_COMPLETED" />
+        <permission name="android.permission.RECORD_AUDIO" />
+        <permission name="android.permission.REQUEST_DELETE_PACKAGES" />
+        <permission name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+        <permission name="android.permission.REQUEST_INSTALL_PACKAGES" />
+        <permission name="android.permission.SEND_SMS" />
+        <permission name="android.permission.SET_WALLPAPER" />
+        <permission name="android.permission.SYSTEM_ALERT_WINDOW" />
+        <permission name="android.permission.TRANSMIT_IR" />
+        <permission name="android.permission.USE_BIOMETRIC" />
+        <permission name="android.permission.VIBRATE" />
+        <permission name="android.permission.WRITE_SETTINGS"/>
+        <permission name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     </privapp-permissions>
 </permissions>
 

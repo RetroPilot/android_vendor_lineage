@@ -5,10 +5,42 @@ while [ "`getprop sys.boot_completed | tr -d '\r' `" != "1" ] ; do sleep 1; done
 sleep 10
 
 # globals
-CHROOT=/data/ubuntu
 SET_STAGE=$(cat /sdcard/.setup)
 
-monkey -p ai.flow.android -c android.intent.category.LAUNCHER 1
+# Get the user and group of the Termux binary
+TERMUX_BINARY="/data/data/com.termux/files/usr/bin/bash"
+TERMUX_USER=$(stat -c %U "$TERMUX_BINARY")
+TERMUX_GROUP=$(stat -c %G "$TERMUX_BINARY")
+
+
+monkey -p com.termux -c android.intent.category.LAUNCHER 1
+
+# progress check
+if [ ! -e "/sdcard/.setup" ]
+then
+  echo "0" > /sdcard/.setup
+fi
+
+if [ "$SET_STAGE" -eq "0" ]
+then
+  while true; do
+    if [ -f "/data/data/com.termux/files/home/.termux/termux.properties" ]
+    then
+      sed -i '/allow-external-apps/s/^#*//g' /data/data/com.termux/files/home/.termux/termux.properties
+      cp /etc/retros/setup_env_termux /data/data/com.termux/files/usr/bin/setup_env_termux
+
+      chown "$TERMUX_USER:$TERMUX_GROUP" "/data/data/com.termux/files/usr/bin/setup_env_termux"
+      chmod +x /data/data/com.termux/files/usr/bin/setup_env_termux
+
+      pm disable com.termux
+      pm enable com.termux
+      echo "1" > /sdcard/.setup
+      SET_STAGE=1
+      break
+    fi
+    sleep 1
+  done
+fi
 
 function disableSystemUI() {
   echo "Disabling systemui"
@@ -28,15 +60,9 @@ then
   mkdir /data/tmp
 fi
 
-# progress check
-if [ ! -e "/sdcard/.setup" ]
-then
-  echo "0" > /sdcard/.setup
-fi
-
 # setup has not completed
 # - lt "4"
-if [ "$SET_STAGE" -lt "2" ]
+if [ "$SET_STAGE" -lt "3" ]
 then
   # wifi loop
   # do not progress until there's an internet connection
@@ -55,53 +81,13 @@ then
   echo "SET STAGE=$SET_STAGE"
 fi
 
-if [ "$SET_STAGE" -eq "0" ]
+if [ "$SET_STAGE" -eq "1" ]
 then
   disableSystemUI
-  echo "1" > /sdcard/.setup
-  SET_STAGE=1
+  echo "2" > /sdcard/.setup
+  SET_STAGE=2
   reboot
 fi
 
-# wait here until user setup gets a URL
-while true; do
-  if [ "$SET_STAGE" -gt "0" ]
-  then
-    break
-  fi
-  sleep 1
-done
 
-
-# download and install the chroot
-if [ "$SET_STAGE" -lt "2" ]
-then
-  # ROOTFS_TAR="ubuntu-focal-core-cloudimg-arm64-root-2020.12.10.tar.gz"
-  # curl -L -o /sdcard/Download/ubuntu.tar.gz https://github.com/termux/proot-distro/releases/download/v1.2-ubuntu-focal-rootfs/$ROOTFS_TAR
-  curl -L -o /sdcard/Download/ubuntu.tar.gz https://github.com/RetroPilot/flowpilot/releases/download/v0.1.0alpha2/flowpilot-chroot.tar.gz
-  mkdir -p $CHROOT
-  tar xfp /sdcard/Download/ubuntu.tar.gz -C $CHROOT
-  mkdir -p $CHROOT/sdcard
-  mkdir -p $CHROOT/data
-
-  # DL reqs file, copy userland script into chroot, add stuff to bashrc
-  UBUNTU_REQS='https://raw.githubusercontent.com/flowdriveai/flowpilot/master/scripts/install-flowpilot-android'
-  curl $UBUNTU_REQS > $CHROOT/root/install_reqs.sh
-  # busybox wget $UBUNTU_REQS -P $CHROOT/root/install_reqs.sh
-  chmod +x $CHROOT/root/install_reqs.sh
-  cp /etc/retros/flowpilot_userland $CHROOT/bin/flowpilot_userland
-  cp /etc/retros/flowpilot_startup $CHROOT/bin/flowpilot_startup
-  chmod +x $CHROOT/bin/flowpilot_userland
-  chmod +x $CHROOT/bin/flowpilot_startup
-  # copy tmux config
-  cp /etc/retros/.tmux.conf $CHROOT/root/.tmux.conf
-
-  echo "2" > /sdcard/.setup
-  SET_STAGE=2
-fi
-
-# login to the chroot
-if [ "$SET_STAGE" -ge "2" ]
-then
-  launch_flowpilot
-fi
+monkey -p ai.flow.android -c android.intent.category.LAUNCHER 1

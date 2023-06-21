@@ -42,7 +42,7 @@ include $(BUILD_PREBUILT)
 # RetrOS packages
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := opencamera
+LOCAL_MODULE := OpenCamera
 LOCAL_MODULE_OWNER := lineage
 LOCAL_SRC_FILES := priv-app/opencamera/OpenCamera.apk
 LOCAL_CERTIFICATE := platform
@@ -54,7 +54,31 @@ LOCAL_PRIVILEGED_MODULE := true
 include $(BUILD_PREBUILT)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := flowpilot
+LOCAL_MODULE := Termux
+LOCAL_MODULE_OWNER := lineage
+LOCAL_SRC_FILES := priv-app/termux/termux.apk
+LOCAL_CERTIFICATE := platform
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := APPS
+LOCAL_DEX_PREOPT := false
+LOCAL_MODULE_SUFFIX := .apk
+LOCAL_PRIVILEGED_MODULE := true
+include $(BUILD_PREBUILT)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := TermuxApi
+LOCAL_MODULE_OWNER := lineage
+LOCAL_SRC_FILES := priv-app/termux_api/termuxapi.apk
+LOCAL_CERTIFICATE := platform
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := APPS
+LOCAL_DEX_PREOPT := false
+LOCAL_MODULE_SUFFIX := .apk
+LOCAL_PRIVILEGED_MODULE := true
+include $(BUILD_PREBUILT)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := Flowpilot
 LOCAL_MODULE_OWNER := lineage
 LOCAL_SRC_FILES := priv-app/flowpilot/android-release.apk
 LOCAL_CERTIFICATE := platform

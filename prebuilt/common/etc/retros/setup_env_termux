@@ -1,0 +1,10 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+yes | termux-setup-storage
+
+yes | pkg update && pkg upgrade && pkg install wget -y
+wget -q https://raw.githubusercontent.com/RetroPilot/flowpilot/papers-changes/scripts/flowpilot-setup-env-android
+chmod +x flowpilot-setup-env-android
+./flowpilot-setup-env-android --root
+
+sudo login-flowpilot-root --install

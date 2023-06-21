@@ -41,6 +41,7 @@ PRODUCT_COPY_FILES += \
     vendor/lineage/prebuilt/common/bin/phh-su:$(TARGET_COPY_OUT_SYSTEM)/bin/phh-su \
     vendor/lineage/prebuilt/common/etc/retros/flowpilot_userland:$(TARGET_COPY_OUT_SYSTEM)/etc/retros/flowpilot_userland \
     vendor/lineage/prebuilt/common/etc/retros/flowpilot_startup:$(TARGET_COPY_OUT_SYSTEM)/etc/retros/flowpilot_startup \
+    vendor/lineage/prebuilt/common/etc/retros/setup_env_termux:$(TARGET_COPY_OUT_SYSTEM)/etc/retros/setup_env_termux \
     vendor/lineage/prebuilt/common/xbin/su:$(TARGET_COPY_OUT_SYSTEM)/xbin/su \
     vendor/lineage/prebuilt/common/etc/retros/.tmux.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/retros/.tmux.conf \
     vendor/lineage/prebuilt/common/etc/permissions/privapp-permissions-retropilot.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-retropilot.xml
@@ -123,8 +124,10 @@ PRODUCT_PACKAGES += \
     Updater
 
 PRODUCT_PACKAGES += \
-    opencamera \
-    flowpilot
+    OpenCamera \
+    Flowpilot \
+    Termux \
+    TermuxApi
 
 # Themes
 PRODUCT_PACKAGES += \
