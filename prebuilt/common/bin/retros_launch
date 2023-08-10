@@ -4,14 +4,18 @@
 function copyUserspace() {
     export EXTRACT_UNSAFE_SYMLINKS=1
     busybox tar -xvf /system/etc/retros/files.tar.xz -C /data/data/com.termux
+    mount -o remount,rw /
+    ln -s /data/data/com.termux/files/usr /usr
+    mkdir -p /tmp
     echo "2" > /data/data/com.termux/.retros_setup
 }
 
 function launchUserspace() {
+    mount -t tmpfs -o size=2048M tmpfs /tmp
     export HOME=/data/data/com.termux/files/home
     export PATH=/data/data/com.termux/files/usr/bin:/bin
     export LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib:/data/data/com.termux/files/usr/local/lib64
-    bash -C /system/bin/retros_userspace.sh
+    bash -C /system/bin/retros_userspace
 }
 
 # TODO: get rid of SystemUI in the OS, or modify it to our liking

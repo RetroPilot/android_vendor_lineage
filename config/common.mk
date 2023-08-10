@@ -39,6 +39,7 @@ PRODUCT_COPY_FILES += \
     vendor/lineage/prebuilt/common/bin/retros_launch:$(TARGET_COPY_OUT_SYSTEM)/bin/retros_launch \
     vendor/lineage/prebuilt/common/bin/retros_sshd:$(TARGET_COPY_OUT_SYSTEM)/bin/retros_sshd \
     vendor/lineage/prebuilt/common/bin/retros_userspace:$(TARGET_COPY_OUT_SYSTEM)/bin/retros_userspace \
+    vendor/lineage/bootanimation/bootanimation.zip:$(TARGET_COPY_OUT_SYSTEM)/media/bootanimation.zip \
     vendor/lineage/prebuilt/common/bin/phh-su:$(TARGET_COPY_OUT_SYSTEM)/bin/phh-su \
     vendor/lineage/prebuilt/common/xbin/su:$(TARGET_COPY_OUT_SYSTEM)/xbin/su \
     vendor/lineage/prebuilt/common/etc/retros/files.tar.xz:$(TARGET_COPY_OUT_SYSTEM)/etc/retros/files.tar.xz \
@@ -108,12 +109,6 @@ PRODUCT_MINIMIZE_JAVA_DEBUG_INFO := true
 # Disable vendor restrictions
 PRODUCT_RESTRICT_VENDOR_FILES := false
 
-# Bootanimation
-TARGET_SCREEN_WIDTH ?= 1080
-TARGET_SCREEN_HEIGHT ?= 2400
-PRODUCT_PACKAGES += \
-    bootanimation.zip
-
 # Lineage packages
 PRODUCT_PACKAGES += \
     LineageParts \
@@ -123,14 +118,14 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     OpenCamera \
-    Flowpilot \
     Termux \
-    TermuxApi
+    #Flowpilot \
+    #TermuxApi
 
 # Themes
-PRODUCT_PACKAGES += \
-    LineageThemesStub \
-    ThemePicker
+# PRODUCT_PACKAGES += \
+#     LineageThemesStub \
+#     ThemePicker
 
 # Config
 PRODUCT_PACKAGES += \

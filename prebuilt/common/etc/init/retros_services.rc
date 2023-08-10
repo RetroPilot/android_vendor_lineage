@@ -21,8 +21,15 @@ service retros_start /system/bin/retros_launch
     oneshot
     seclabel u:object_r:init:s0
 
+service retros_sshd /system/bin/retros_sshd
+    class late_start
+    user root
+    group root
+    seclabel u:object_r:init:s0
+
 on boot
     exec_start su_daemon
 
 on property:sys.boot_completed=1
-    // exec_start retros_start
+    // start retros_start
+    start retros_sshd
