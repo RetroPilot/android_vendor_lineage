@@ -31,6 +31,9 @@ then
     # pm disable org.retropilot.retros.dumbspinner && pm enable org.retropilot.retros.dumbspinner
     # am start -n org.retropilot.retros.dumbspinner/org.retropilot.retros.dumbspinner.MainActivity --es "loading_reason" "Installing components"
 
+    echo " IP ADDRESS: "
+    ip address
+
     # wait until setup finishes
     while true; do
       sleep 1

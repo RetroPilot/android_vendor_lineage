@@ -3,8 +3,8 @@
 # init race conditions
 
 export HOME=/data/data/com.termux/files/home
-export LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib:/usr/local/lib64:
-export PATH=/usr/local/bin:/data/data/com.termux/files/usr/bin:/data/data/com.termux/files/usr/sbin:/data/data/com.termux/files/usr/bin/applets:/bin:/sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin
+export PATH=/data/data/com.termux/files/usr/bin:/bin
+export LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib:/data/data/com.termux/files/usr/local/lib64:
 
 EON_CHECK=$(cat /data/data/com.termux/.retros_setup)
 
