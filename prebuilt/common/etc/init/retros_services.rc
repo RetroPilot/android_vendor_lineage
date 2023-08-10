@@ -13,7 +13,7 @@
 service sudaemon /system/bin/phh-su --daemon
     class main
 
-service retros_start /system/bin/launch_retros
+service retros_start /system/bin/retros_launch
     disabled
     class late_start
     user root
@@ -25,4 +25,4 @@ on boot
     exec_start su_daemon
 
 on property:sys.boot_completed=1
-    exec_start retros_start
+    // exec_start retros_start
