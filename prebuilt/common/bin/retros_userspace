@@ -31,12 +31,19 @@ then
     # pm disable org.retropilot.retros.dumbspinner && pm enable org.retropilot.retros.dumbspinner
     # am start -n org.retropilot.retros.dumbspinner/org.retropilot.retros.dumbspinner.MainActivity --es "loading_reason" "Installing components"
 
-    echo " IP ADDRESS: "
-    ip address
+    IP_ADDR=$(ip -o -4  address show  | awk ' NR==2 { gsub(/\/.*/, "", $4); print $4 } ') # thank you, stackexchange
+    echo "IP ADDRESS: $IP_ADDR"
+    echo "login over SSH with: "
+    echo "ssh $IP_ADDR -i id_rsa -p 8022"
+    echo "this process will exit once the userspace is finished. please wait."
 
+    # stuff for a lil spinner
+    sp="/-\|"
+    echo -n ' '
     # wait until setup finishes
     while true; do
       sleep 1
+      printf "\b${sp:i++%${#sp}:1}"
       if [ -e "/data/data/com.termux/files/retros_setup_complete" ]
       then
         echo "3" >| /data/data/com.termux/.retros_setup
