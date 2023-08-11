@@ -31,10 +31,13 @@ then
     # pm disable org.retropilot.retros.dumbspinner && pm enable org.retropilot.retros.dumbspinner
     # am start -n org.retropilot.retros.dumbspinner/org.retropilot.retros.dumbspinner.MainActivity --es "loading_reason" "Installing components"
 
+    clear
     IP_ADDR=$(ip -o -4  address show  | awk ' NR==2 { gsub(/\/.*/, "", $4); print $4 } ') # thank you, stackexchange
     echo "IP ADDRESS: $IP_ADDR"
     echo "login over SSH with: "
     echo "ssh $IP_ADDR -i id_rsa -p 8022"
+    echo "once logged in, you can check the process with:" 
+    echo "tmux a"
     echo "this process will exit once the userspace is finished. please wait."
 
     # stuff for a lil spinner
@@ -51,6 +54,11 @@ then
       fi
     done
   fi
+
+  clear
+  echo "login over SSH to enter the userland: "
+  echo "ssh $IP_ADDR -i id_rsa -p 8022"
+
   # rm /data/data/com.termux/files/.fork_url
   # am start -n org.retropilot.retros.dumbspinner/org.retropilot.retros.dumbspinner.fork_select
   
