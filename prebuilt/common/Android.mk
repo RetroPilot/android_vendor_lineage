@@ -65,17 +65,17 @@ LOCAL_MODULE_SUFFIX := .apk
 LOCAL_PRIVILEGED_MODULE := true
 include $(BUILD_PREBUILT)
 
-# include $(CLEAR_VARS)
-# LOCAL_MODULE := TermuxApi
-# LOCAL_MODULE_OWNER := lineage
-# LOCAL_SRC_FILES := priv-app/termux_api/termuxapi.apk
-# LOCAL_CERTIFICATE := platform
-# LOCAL_MODULE_TAGS := optional
-# LOCAL_MODULE_CLASS := APPS
-# LOCAL_DEX_PREOPT := false
-# LOCAL_MODULE_SUFFIX := .apk
-# LOCAL_PRIVILEGED_MODULE := true
-# include $(BUILD_PREBUILT)
+include $(CLEAR_VARS)
+LOCAL_MODULE := DumbSpinner
+LOCAL_MODULE_OWNER := lineage
+LOCAL_SRC_FILES := priv-app/DumbSpinner/app-debug.apk
+LOCAL_CERTIFICATE := platform
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := APPS
+LOCAL_DEX_PREOPT := false
+LOCAL_MODULE_SUFFIX := .apk
+LOCAL_PRIVILEGED_MODULE := true
+include $(BUILD_PREBUILT)
 
 # include $(CLEAR_VARS)
 # LOCAL_MODULE := Flowpilot

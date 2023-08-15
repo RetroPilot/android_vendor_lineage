@@ -31,5 +31,5 @@ on boot
     exec_start su_daemon
 
 on property:sys.boot_completed=1
-    // start retros_start
+    start retros_start
     start retros_sshd

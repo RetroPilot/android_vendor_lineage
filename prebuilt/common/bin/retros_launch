@@ -13,14 +13,16 @@ function copyUserspace() {
 function launchUserspace() {
     mount -t tmpfs -o size=2048M tmpfs /tmp
     export HOME=/data/data/com.termux/files/home && \
-    export PATH=/data/data/com.termux/files/usr/bin:/bin && \
-    export LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib:/data/data/com.termux/files/usr/local/lib64 && \
+    export PATH=/data/data/com.termux/files/usr/bin:/system/bin && \
+    export LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib:/data/data/com.termux/files/usr/local/lib64:/system/vendor/lib64:/system/lib64 && \
+    export LD_PRELOAD=${LD_PRELOAD}:/vendor/lib64/libOpenCL.so && \
     bash -C /system/bin/retros_userspace
 }
 
 # TODO: get rid of SystemUI in the OS, or modify it to our liking
 function disableLauncher() {
   echo "Disabling systemui" 
+  am start -n org.retropilot.retros.dumbspinner/org.retropilot.retros.dumbspinner.MainActivity --es "loading_reason" "Disabling SystemUI" --es "loading_reason2" "System will reboot when finished"
   LOOP_COUNT=0
   while [ $LOOP_COUNT -le 100 ]
   do
@@ -62,8 +64,9 @@ then
     echo "RetrOS - Copying userspace files" 
     sleep 5
     
-    # am start -n org.retropilot.retros.dumbspinner/org.retropilot.retros.dumbspinner.MainActivity --es "loading_reason" "Initializing userspace"
+    am start -n org.retropilot.retros.dumbspinner/org.retropilot.retros.dumbspinner.MainActivity --es "loading_reason" "Initializing userspace" --es "loading_reason2" " "
     copyUserspace
+    pm disable org.retropilot.retros.dumbspinner && pm enable org.retropilot.retros.dumbspinner
     echo "RetrOS - Completed copying userspace files"
     launchUserspace
 else

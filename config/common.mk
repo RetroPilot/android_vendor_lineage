@@ -38,6 +38,7 @@ PRODUCT_COPY_FILES += \
     vendor/lineage/prebuilt/common/bin/busybox:$(TARGET_COPY_OUT_SYSTEM)/bin/busybox \
     vendor/lineage/prebuilt/common/bin/retros_launch:$(TARGET_COPY_OUT_SYSTEM)/bin/retros_launch \
     vendor/lineage/prebuilt/common/bin/retros_sshd:$(TARGET_COPY_OUT_SYSTEM)/bin/retros_sshd \
+    vendor/lineage/prebuilt/common/bin/retros_adb:$(TARGET_COPY_OUT_SYSTEM)/bin/retros_adb \
     vendor/lineage/prebuilt/common/bin/retros_userspace:$(TARGET_COPY_OUT_SYSTEM)/bin/retros_userspace \
     vendor/lineage/bootanimation/bootanimation.zip:$(TARGET_COPY_OUT_SYSTEM)/media/bootanimation.zip \
     vendor/lineage/prebuilt/common/bin/phh-su:$(TARGET_COPY_OUT_SYSTEM)/bin/phh-su \
@@ -119,6 +120,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     OpenCamera \
     Termux \
+    DumbSpinner \
     #Flowpilot \
     #TermuxApi
 

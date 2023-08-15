@@ -1,0 +1,7 @@
+#!/system/bin/sh
+
+export HOME=/data/data/com.termux/files/home && \
+export PATH=/data/data/com.termux/files/usr/bin:/system/bin && \
+export LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib:/data/data/com.termux/files/usr/local/lib64:/system/vendor/lib64:/system/lib64 && \
+export LD_PRELOAD=${LD_PRELOAD}:/vendor/lib64/libOpenCL.so && \
+bash
