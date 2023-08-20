@@ -110,5 +110,12 @@ fi
 
 IP_ADDR=$(ip -o -4  address show  | awk ' NR==2 { gsub(/\/.*/, "", $4); print $4 } ')
 # for now, just launch a termux session
+# DEV: wait for wifi
+while true; do
+  if ping -c 1 8.8.8.8; then
+    break
+  fi
+  sleep 1
+done
 am start -n org.retropilot.retros.dumbspinner/org.retropilot.retros.dumbspinner.MainActivity --es "loading_reason" "login with the following command" --es "loading_reason2" "ssh root@$IP_ADDR -i id_rsa -p 8022"
-tmux new-session -d -s retropilot /usr/bin/bash
+tmux new-session -d -s retros /usr/bin/bash

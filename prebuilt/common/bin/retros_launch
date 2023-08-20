@@ -11,11 +11,11 @@ function copyUserspace() {
 }
 
 function launchUserspace() {
-    mount -t tmpfs -o size=2048M tmpfs /tmp
+    mount -t tmpfs -o size=8192M tmpfs /tmp
     export HOME=/data/data/com.termux/files/home && \
     export PATH=/data/data/com.termux/files/usr/bin:/system/bin && \
-    export LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib:/data/data/com.termux/files/usr/local/lib64:/system/vendor/lib64:/system/lib64 && \
-    export LD_PRELOAD=${LD_PRELOAD}:/vendor/lib64/libOpenCL.so && \
+    export LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib:/data/data/com.termux/files/usr/local/lib64:/system/vendor/lib64:/system/lib64: && \
+    export LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so:/vendor/lib64/libOpenCL.so: && \
     bash -C /system/bin/retros_userspace
 }
 
